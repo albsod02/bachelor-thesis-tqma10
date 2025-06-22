@@ -28,7 +28,7 @@ function define_test_function(f::Function; end_point, n, add_noise, variance)
         b_values .+= sigma * randn(length(b_values))
     end
 
-    return x_values, b_values
+    return collect(x_values), collect(b_values)
 end 
 
 
