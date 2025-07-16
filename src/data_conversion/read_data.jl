@@ -41,8 +41,8 @@ function read_data_1D(filepath)
         error("Missing '# y values' delimiter in data.")
     end
 
-    x_values = normalize_data(parse.(Float64, lines[1:split_index-1]))
-    y_values = normalize_data(parse.(Float64, lines[split_index+1:end]))
+    x_values = parse.(Float64, lines[1:split_index-1])
+    y_values = parse.(Float64, lines[split_index+1:end])
     
     return x_values, y_values
 end

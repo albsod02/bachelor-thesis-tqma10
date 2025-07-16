@@ -1,4 +1,4 @@
-module ConstructBSpline
+module SplineInterpolation
 
 export construct_b_spline, plot_interpolation_with_original_function, interpolation_error
 
@@ -71,23 +71,30 @@ Plots a comparison between the original function and the B-spline interpolation.
 # Returns
 - `spline_func::Function`: The constructed spline interpolation function for later use.
 """
-function plot_interpolation_with_original_function(path, f, x, b, n, end_point, smoothing_factor, end_condition, add_noise, variance, add_knots)
+function plot_interpolation_with_original_function(path, f, x, b, n, end_point, smoothing_factor, end_condition; add_noise, variance, add_knots)
     x_interpolated, b_interpolated, spline_func = construct_b_spline(path, n, end_condition, smoothing_factor)
 
     fig = Figure()
-    ax = Axis(fig[1, 1], title="f(x) vs B-spline", xlabel="x", ylabel="b(x)")
+    ax = Axis(fig[1, 1], title=" ", xlabel="x", ylabel="b(x)")
 
     x_dense = range(0, stop=end_point, length=10 * n)
     b_true = f.(x_dense)
 
-    lines!(ax, normalize_data(x_dense), normalize_data(b_true), color=:blue, label="f(x)")
-    lines!(ax, normalize_data(x_interpolated), normalize_data(b_interpolated), color=:red, linestyle=:dash, label="B-spline interpolation")
+    # lines!(ax, normalize_data(x_dense), normalize_data(b_true), color=:blue, label="f(x)")
+    # lines!(ax, normalize_data(x_interpolated), normalize_data(b_interpolated), color=:red, linestyle=:dash, label="B-spline interpolation")
+
+
+    lines!(ax, x_dense, b_true, color=:blue, label="f(x)")
+    lines!(ax, x_interpolated, b_interpolated, color=:red, linestyle=:dash, label="B-spline interpolation")
+
 
     if add_knots
-        scatter!(ax, normalize_data(x), normalize_data(b), color=:black, label="Sample points")
+        # scatter!(ax, normalize_data(x), normalize_data(b), color=:black, label="Sample points")
+        scatter!(ax, x, b, color=:black, label="Sample points", markersize=6)
     end
 
-    axislegend(ax; orientation=:horizontal, position=(0.5, 1.02), halign=:center)
+    axislegend(ax; orientation=:horizontal, position=(1.0, 1.0), padding=5, rowgap=2, colgap=5, labelsize=10)
+
 
     save("spline_interpolation.png", fig)
 
@@ -114,8 +121,9 @@ using the specified norm.
 - `ArgumentError` if an unsupported norm string is passed.
 """
 function interpolation_error(norm::String, f::Function, interpolation_function::Function, end_point::Real, n::Int)
-    n = min(100 * n, 10000)
-    x_dense = range(0, stop=end_point, length=n)
+
+    m = 10 * n
+    x_dense = range(0, stop=end_point, length=m)
     b_true = f.(x_dense)
     b_interpolation = interpolation_function.(x_dense)
     diff = abs.(b_true .- b_interpolation)

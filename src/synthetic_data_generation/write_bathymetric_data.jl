@@ -25,8 +25,8 @@ function define_test_function(f::Function; end_point, n, add_noise, variance)
 
     if add_noise
         sigma = sqrt(variance)
-        b_values .+= sigma * randn(length(b_values))
-    end
+        b_values += sigma * randn(length(b_values))
+    end 
 
     return collect(x_values), collect(b_values)
 end 
