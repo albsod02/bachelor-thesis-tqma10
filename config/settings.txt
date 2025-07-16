@@ -1,0 +1,10 @@
+# Bathymetric interpolation settings for 1D
+
+filename = example
+end_point = 1.0
+n = 58
+add_noise = true
+alpha = 5
+smoothing_factor = 0
+end_condition = not-a-knot
+add_knots = true
