@@ -122,8 +122,8 @@ using the specified norm.
 """
 function interpolation_error(norm::String, f::Function, interpolation_function::Function, end_point::Real, n::Int)
 
-    m = 10 * n
-    x_dense = range(0, stop=end_point, length=m)
+    n_dense = 10 * n
+    x_dense = range(0, stop=end_point, length = n_dense)
     b_true = f.(x_dense)
     b_interpolation = interpolation_function.(x_dense)
     diff = abs.(b_true .- b_interpolation)
