@@ -1,0 +1,16 @@
+# Bathymetric reconstruction settings for 1D
+
+filename = synthetic_data
+end_point = 1.0
+n = 160
+sparsity = 4
+add_noise = true
+alpha = 3
+smoothing_factor = 0.0
+end_condition = free
+add_knots = false
+
+lambda_min = 0.0000001
+lambda_max = 1000
+num_points = 100
+lambda = 20000
