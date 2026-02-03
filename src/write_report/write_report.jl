@@ -1,5 +1,5 @@
 """
-    write_report(filename, b, reconstructed_function, end_point, n; n_dense::Int = 5000)
+    write_report(filename, b, reconstructed_function, end_point, n; n_dense::Int = 5000) -> path
 
 Write a text report `<filename>.txt` with relative errors for `b` and `b'`.
 
