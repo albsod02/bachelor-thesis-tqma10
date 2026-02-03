@@ -3,7 +3,7 @@
 filename = synthetic_data
 end_point = 1.0
 n = 160
-sparsity = 4
+sparsity = 2
 add_noise = true
 alpha = 3
 smoothing_factor = 0.0
@@ -11,6 +11,10 @@ end_condition = free
 add_knots = false
 
 lambda_min = 0.0000001
-lambda_max = 1000
+lambda_max = 5000
 num_points = 100
 lambda = 20000
+
+alpha_max = 11
+generate_error_alpha_plots = false
+generate_latex_tables = false
