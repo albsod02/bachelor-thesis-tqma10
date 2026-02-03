@@ -1,5 +1,11 @@
+module WriteReport
+
+export write_report 
+
+using ..Errors: compute_relative_error, compute_relative_derivative_error
+
 """
-    write_report(filename, b, reconstructed_function, end_point, n; n_dense::Int = 5000) -> path
+    write_report(filename, b, reconstructed_function, end_point, n; n_dense::Int = 5000)
 
 Write a text report `<filename>.txt` with relative errors for `b` and `b'`.
 
@@ -40,3 +46,5 @@ function write_report(filename, b, reconstructed_function, end_point, n; n_dense
 
     return path
 end
+
+end # module
