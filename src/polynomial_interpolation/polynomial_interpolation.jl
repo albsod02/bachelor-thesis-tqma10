@@ -1,22 +1,25 @@
-# this seems to work
-
-# using the monic bases or nexton basis results in bad interpolations for most datasets
-# but using lagrange basis results in good interpolation of the data
-
 using CairoMakie
 
-# Load the data conversion module
 include("read_data.jl")
 using .ConvertData
 
-# Normalize a vector of real values to the interval [0, 1]
+"""
+    normalize_data(values::AbstractVector{<:Real}) -> Vector{Float64}
+
+Normalize `values` linearly to the range `[0, 1]`.
+"""
 function normalize_data(values::AbstractVector{<:Real})
     min_val = minimum(values)
     max_val = maximum(values)
     return (values .- min_val) ./ (max_val - min_val)
 end
 
-# Evaluate monic polynomial given coefficients at x
+"""
+    monic_eval(coeffs, x) -> y
+
+Evaluate a polynomial at `x` in the monomial (power) basis with coefficients `coeffs`,
+interpreted as `p(x) = coeffs[1] + coeffs[2]x + ...`.
+"""
 function monic_eval(coeffs, x)
     result = zero(x)
     for i in reverse(eachindex(coeffs))
@@ -25,7 +28,12 @@ function monic_eval(coeffs, x)
     return result
 end
 
-# Evaluate Newton form polynomial using divided differences
+"""
+    newton_eval(coeffs, x, x_data) -> y
+
+Evaluate a polynomial at `x` in Newton form using divided-difference coefficients `coeffs`
+defined on nodes `x_data`.
+"""
 function newton_eval(coeffs, x, x_data)
     result = coeffs[end]
     for i in length(coeffs)-1:-1:1
@@ -34,7 +42,11 @@ function newton_eval(coeffs, x, x_data)
     return result
 end
 
-# Evaluate Lagrange interpolation at point x
+"""
+    lagrange_eval(x_data, y_data, x) -> y
+
+Evaluate the Lagrange interpolating polynomial through `(x_data, y_data)` at the point `x`.
+"""
 function lagrange_eval(x_data, y_data, x)
     n = length(x_data)
     result = 0.0
@@ -50,12 +62,23 @@ function lagrange_eval(x_data, y_data, x)
     return result
 end
 
-# Solve linear system Ax = f
+"""
+    solve_linear_system(A, f) -> x
+
+Solve the linear system `A * x = f`.
+"""
 function solve_linear_system(A, f)
     return A \ f
 end
 
-# Compute divided differences for Newton interpolation
+"""
+    divided_differences(x, y) -> a
+
+Compute divided differences for Newton interpolation.
+
+Returns `a` such that the Newton-form interpolant is determined by coefficients `a`
+on nodes `x`.
+"""
 function divided_differences(x, y)
     n = length(x)
     a = copy(y)
@@ -67,7 +90,13 @@ function divided_differences(x, y)
     return a
 end
 
-# Generate interpolated values for a given basis
+"""
+    create_polynomial_interpolation(x, y, basis) -> y_fit
+
+Create interpolated values at the sample points `x` for the chosen polynomial basis.
+
+Supported bases: `"monic"`, `"newton"`, `"lagrange"`.
+"""
 function create_polynomial_interpolation(x, y, basis)
     n = length(x)
 
@@ -88,14 +117,18 @@ function create_polynomial_interpolation(x, y, basis)
     end
 end
 
-# Plot the original and interpolated data
+"""
+    plot_interpolation(filepath::String, basis::String, save_location::String)
+
+Read 1D data from `filepath`, perform polynomial interpolation using `basis`, and save
+a comparison plot to `save_location`.
+"""
 function plot_interpolation(filepath::String, basis::String, save_location::String)
     x, b = read_data_1D(filepath)
 
     x_norm = normalize_data(x)
     b_norm = normalize_data(b)
 
-    # Ensure the same normalized values are used for fitting
     b_fit = normalize_data(create_polynomial_interpolation(x_norm, b_norm, basis))
 
     fig = Figure()
@@ -106,7 +139,6 @@ function plot_interpolation(filepath::String, basis::String, save_location::Stri
     save(save_location, fig)
 end
 
-# Main entry point from command line
 if length(ARGS) < 2
     println("Usage: julia process_data.jl <datafile> <basis>")
     exit(1)
