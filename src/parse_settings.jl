@@ -2,6 +2,19 @@ module SettingsParser
 
 export parse_settings
 
+"""
+    parse_settings(path) -> Dict{String, Any}
+
+Parse a simple `key = value` settings file into a dictionary.
+
+- Empty lines and lines starting with `#` are ignored.
+- Lines without `=` are skipped.
+- Values are converted when possible:
+  - `"true"` / `"false"` → `Bool`
+  - strings containing `.` → `Float64`
+  - digit-only strings → `Int`
+  - otherwise kept as `String`
+"""
 function parse_settings(path)
     settings = Dict{String, Any}()
     for line in eachline(path)
@@ -12,7 +25,7 @@ function parse_settings(path)
         key, val = parts
         key = strip(key)
         val = strip(val)
-        
+
         # Try to convert value to number or bool
         if val == "true"
             val = true
@@ -28,6 +41,5 @@ function parse_settings(path)
     end
     return settings
 end
-
 
 end # module
